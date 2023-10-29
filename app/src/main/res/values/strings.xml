@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">PortaRetratos</string>
-    <string name="descripcion_flecha">Botón con ícono de flecha</string>
+    <string name="descripcion_flecha_uno">Botón con ícono de flecha</string>
 </resources>
