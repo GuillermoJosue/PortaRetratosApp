@@ -16,7 +16,19 @@ public class SliderActivity extends AppCompatActivity {
     private int[] imageArray = {R.drawable.image1, R.drawable.image2, R.drawable.image3};
     private int currentIndex = 0;
     private Handler handler = new Handler();
+
+    //Para desaparecer boton
+    private static final long DELAY = 3000; // 3 segundos, ajusta según tus necesidades
+
     ImageButton imageButton;
+
+    //Para desaparecer boton
+    private Runnable hideArrowRunnable = new Runnable() {
+        @Override
+        public void run() {
+            imageButton.setVisibility(View.GONE);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +38,9 @@ public class SliderActivity extends AppCompatActivity {
         imageButton = findViewById(R.id.flechaImageButton);
 
         startSlider();
+        //Para desaparecer boton
+        handler.postDelayed(hideArrowRunnable, DELAY);
+
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,6 +48,18 @@ public class SliderActivity extends AppCompatActivity {
                 Intent intent = new Intent(SliderActivity.this, MainActivity.class);
                 // Iniciar la SecondActivity
                 startActivity(intent);
+            }
+        });
+
+        imageViewSlider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Muestra el ícono de flecha
+                imageButton.setVisibility(View.VISIBLE);
+
+                // Luego de mostrarlo, programa su ocultamiento después de un tiempo
+                handler.removeCallbacks(hideArrowRunnable); // Asegúrate de eliminar cualquier callback anterior
+                handler.postDelayed(hideArrowRunnable, DELAY);
             }
         });
 
@@ -61,6 +88,12 @@ public class SliderActivity extends AppCompatActivity {
         }
         imageViewSlider.setImageResource(imageArray[currentIndex]);
         currentIndex++;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(hideArrowRunnable); // Es importante limpiar el callback para evitar memory leaks
     }
 
 }
